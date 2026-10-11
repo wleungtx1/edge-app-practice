@@ -7,6 +7,7 @@ All notable changes to this project are documented here. The format follows
 ## [Unreleased]
 
 ### Added
+- `/ping` endpoint for simple liveness checks.
 - Toy FastAPI app: `/health`, `/api/providers` CRUD, SQLite with append-only migrations.
 - CI (Linux + Windows), pre-commit hooks, project checks and the tag-driven release workflow.
 - Stand-in `.run` and `.msi` installers.

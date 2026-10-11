@@ -22,6 +22,10 @@ def create_app() -> FastAPI:
     def health() -> dict[str, str]:
         return {"status": "ok", "version": __version__}
 
+    @application.get("/ping")
+    def ping() -> dict[str, bool]:
+        return {"pong": True}
+
     @application.get("/", response_class=HTMLResponse)
     def index(request: Request) -> HTMLResponse:
         return TEMPLATES.TemplateResponse(
