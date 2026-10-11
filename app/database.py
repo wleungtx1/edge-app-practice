@@ -18,7 +18,8 @@ MIGRATIONS: list[str] = [
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL UNIQUE,
         url TEXT NOT NULL,
-        enabled INTEGER NOT NULL DEFAULT 1
+        enabled INTEGER NOT NULL DEFAULT 1,
+        description TEXT
     )
     """,
 ]
