@@ -1,0 +1,42 @@
+# Environment files — never commit these
+.env
+.env.dev
+.env.test
+.env.local
+.env.bak*
+.env.*.bak
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+
+# Data (runtime state — not source code)
+data/
+/data*/
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+~$*
+
+# Planning, history and internal notes stay local
+local-doc/

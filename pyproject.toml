@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.hatch.version]
+path = "app/__init__.py"
+
+[project]
+name = "edge-app-practice"
+dynamic = ["version"]
+description = "Toy FastAPI app used to practise the GitHub workflow (CI, PRs, releases)"
+requires-python = "==3.11.*"
+dependencies = [
+    "fastapi==0.143.0",
+    "Jinja2==3.1.6",
+    "pydantic==2.14.0",
+    "pydantic-settings==2.15.0",
+    "starlette==1.7.0",
+    "uvicorn==0.54.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["app"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 88
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008"]  # Depends() in FastAPI default args is standard convention
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]

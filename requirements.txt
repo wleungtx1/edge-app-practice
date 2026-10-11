@@ -1,0 +1,7 @@
+# Runtime dependencies (pinned). Keep in step with [project].dependencies in pyproject.toml.
+fastapi==0.143.0
+Jinja2==3.1.6
+pydantic==2.14.0
+pydantic-settings==2.15.0
+starlette==1.7.0
+uvicorn==0.54.0

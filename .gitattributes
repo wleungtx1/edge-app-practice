@@ -1,0 +1,5 @@
+# Keep line endings LF in the repo regardless of editor/OS.
+* text=auto eol=lf
+*.png binary
+*.zip binary
+*.msi binary

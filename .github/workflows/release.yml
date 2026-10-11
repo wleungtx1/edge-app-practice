@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  version:
+    name: Check version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Tag must match app/__init__.py
+        id: version
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          app_version="$(python3 -c 'import ast; m = ast.parse(open("app/__init__.py").read()); print(next(n.value.value for n in m.body if isinstance(n, ast.Assign) and n.targets[0].id == "__version__"))')"
+          if [ "$tag_version" != "$app_version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match app/__init__.py __version__ = $app_version"
+            exit 1
+          fi
+          echo "version=$tag_version" >> "$GITHUB_OUTPUT"
+
+  linux:
+    name: Build .run
+    needs: version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+        run: bash installer/build_run.sh "$VERSION" dist
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: linux-installer
+          path: dist/*
+          if-no-files-found: error
+
+  windows:
+    name: Build .msi
+    needs: version
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build
+        shell: pwsh
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+        run: ./installer/windows/build_msi.ps1 -Version $env:VERSION -OutDir dist
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: windows-installer
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    needs: [linux, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Verify checksums
+        working-directory: dist
+        run: sha256sum -c ./*.sha256
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*
+          generate_release_notes: true
