@@ -21,6 +21,8 @@ MIGRATIONS: list[str] = [
         enabled INTEGER NOT NULL DEFAULT 1
     )
     """,
+    # 2 — provider description
+    "ALTER TABLE providers ADD COLUMN description TEXT",
 ]
 
 
